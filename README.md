@@ -20,7 +20,7 @@
 
 | Step |                                                                                                                                                             |
 |------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1    | Connect the TEE501 sensor module with Raspberry Pi according to the following scheme:<br>__Please note: For this connection scheme the I2C address is 0x48.__ <br>  [<img src="images/TEE501_rpi.png" width="35%"/>] (images/TEE501_rpi.png)[<img src="images/TE501_rpi_breakoutboard.png" width="35%"/>](images/TE501_rpi_breakoutboard.png) |
+| 1    | Connect the TEE501 sensor module with Raspberry Pi according to the following scheme:<br>__Please note: For this connection scheme the I2C address is 0x48.__ <br>  [<img src="images/TEE501_rpi.png" width="35%"/>](images/TEE501_rpi.png) [<img src="images/TE501_rpi_breakoutboard.png" width="35%"/>](images/TE501_rpi_breakoutboard.png) |
 | 2    | Download and install the operating system (https://www.raspberrypi.org/software/operating-systems/).                                                            |
 | 3    | Boot Raspberry Pi and complete any first-time setup if necessary (find instructions online).                                                                |
 | 4    | Activate I2C communication:https://github.com/fivdi/i2c-bus/blob/master/doc/raspberry-pi-i2c.md                     |
