@@ -35,8 +35,8 @@ def get_status_string(status_code):
         1: "Not acknowledge error",
         2: "Checksum error",
         3: "Measurement error",
-        4: "error wrong input for change_periodic_measurment_time",
-        6: "error wrong input for change_measurment_resolution",
+        4: "error wrong input for change_periodic_measurement_time",
+        6: "error wrong input for change_measurement_resolution",
     }
 
     if status_code < len(status_string):
@@ -70,7 +70,11 @@ class TEE501():
         """Let the sensor take a measurement and return the temperature value."""
         i2c_response = self.wire_write_read([0x24, 0x1D],6)
         if (i2c_response[2] == calc_crc8(i2c_response, 0, 2)) :
-            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1]) / 100
+            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1])
+            if temperature > 55536:
+                temperature = (temperature - 65536) / 100
+            else :
+                temperature = temperature / 100
             return temperature
         else:
             raise Warning(get_status_string(2))
@@ -80,24 +84,32 @@ class TEE501():
         """Let the sensor take a measurement and return the temperature value."""
         i2c_response = self.wire_write_read([0x2C, 0x1B],6)
         if (i2c_response[2] == calc_crc8(i2c_response, 0, 2)) :
-            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1]) / 100
+            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1])
+            if temperature > 55536:
+                temperature = (temperature - 65536) / 100
+            else :
+                temperature = temperature / 100
             return temperature
         else:
             raise Warning(get_status_string(2))
 
 
-    def get_periodic_measurment_temp(self):
-        """Get the last measurment from the periodic measurment for temperature"""
+    def get_periodic_measurement_temp(self):
+        """Get the last measurement from the periodic measurement for temperature"""
         i2c_response = self.wire_write_read([0xE0, 0x00],6)
         if (i2c_response[2] == calc_crc8(i2c_response, 0, 2)):
-            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1]) / 100
+            temperature = ((float)(i2c_response[0]) * 256 + i2c_response[1])
+            if temperature > 55536:
+                temperature = (temperature - 65536) / 100
+            else :
+                temperature = temperature / 100
             return temperature
         else:
             raise Warning(get_status_string(2))
 
 
-    def change_periodic_measurment_time(self, milli_sec):
-        """chnage the time between measuremnts in the periodic measurment mode"""
+    def change_periodic_measurement_time(self, milli_sec):
+        """chnage the time between measuremnets in the periodic measurement mode"""
         if  milli_sec < 3276751:
             value = milli_sec/50
             send_bytes = [0,0]
@@ -109,15 +121,15 @@ class TEE501():
             raise Warning(get_status_string(4))
 
 
-    def read_periodic_measurment_time(self):
-        """reads the time between measuremnts in the periodic measurment mode"""
+    def read_periodic_measurement_time(self):
+        """reads the time between measurements in the periodic measurement mode"""
         i2c_response = self.wire_write_read([0x72,0xA7,0x10],2)
         value = i2c_response[1] * 256 + i2c_response[0]
         return value * 0.05
 
 
-    def change_measurment_resolution(self, meas_res_temp): 		#8 - 14 Bit
-        """change the resolution of the measurments"""
+    def change_measurement_resolution(self, meas_res_temp): 		#8 - 14 Bit
+        """change the resolution of the measurements"""
         if (7 < meas_res_temp < 15):
             send_byte = (meas_res_temp - 8)
             self.wire_write([0x72,0xA7,0x0F,send_byte,calc_crc8([0x0F,send_byte],0,2)])
@@ -125,21 +137,21 @@ class TEE501():
             raise Warning(get_status_string(6))
 
 
-    def read_measurment_resolution(self):
-        """reads the resolution of the measurments"""
+    def read_measurement_resolution(self):
+        """reads the resolution of the measurements"""
         i2c_response = self.wire_write_read([0x72,0xA7,0x0F],1)
         i2c_response[0] = (i2c_response[0] << 5) & 255
         i2c_response[0] = i2c_response[0] >> 5
         return i2c_response[0] + 8
 
 
-    def start_periodic_measurment(self):
-        """starts the periodic measurment"""
+    def start_periodic_measurement(self):
+        """starts the periodic measurement"""
         self.wire_write([0x20,0x1E])
 
 
-    def end_periodic_measurment(self):
-        """ends the periodic measurment"""
+    def end_periodic_measurement(self):
+        """ends the periodic measurement"""
         self.wire_write([0x30,0x93])
 
 
@@ -157,8 +169,8 @@ class TEE501():
         self.wire_write([0x30,0xA2])
 
 
-    def new_measurment_ready(self):
-        """get information if a new measurment is ready"""
+    def new_measurement_ready(self):
+        """get information if a new measurement is ready"""
         i2c_response = self.wire_write_read([0xF3,0x52],3)
         if i2c_response[2] == calc_crc8(i2c_response, 0, 2):
             return  i2c_response[0] >> 7
