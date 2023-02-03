@@ -2,7 +2,7 @@
 """
 Example script reading measurement values from the TEE501 Sensor via I2c interface.
 
-Copyright 2022 E+E Elektronik Ges.m.b.H.
+Copyright 2023 E+E Elektronik Ges.m.b.H.
 
 Disclaimer:
 This application example is non-binding and does not claim to be complete with regard
@@ -51,7 +51,7 @@ for i in range(300):
         if TEE_501.new_measurement_ready():
             temperature = TEE_501.get_periodic_measurement_temp()
 
-            print('%0.2f °C' % temperature,)
+            print('%0.2f °C' % temperature)
 
     except Warning as exception:
         print("Exception: " + str(exception))

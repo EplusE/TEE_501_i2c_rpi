@@ -2,7 +2,7 @@
 """
 Example script reading measurement values from the TEE501 Sensor via I2c interface.
 
-Copyright 2022 E+E Elektronik Ges.m.b.H.
+Copyright 2023 E+E Elektronik Ges.m.b.H.
 
 Disclaimer:
 This application example is non-binding and does not claim to be complete with regard
